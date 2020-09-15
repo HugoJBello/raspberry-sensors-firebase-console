@@ -17,11 +17,9 @@ export default class Console extends Vue {
     console.log("bla")
 
 
-    imagesCollection
-        .onSnapshot(async (ref) => {
-          const result = await ref.query.orderBy("date").limit(3).get()
-          console.log(result)
-        });
+    const result = await imagesCollection.where("date",">", 0).orderBy("date").limit(3).get()
+    console.log(result)
+
   }
   mounted() {
     this.getImages()
