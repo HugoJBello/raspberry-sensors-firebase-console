@@ -6,19 +6,29 @@
 
 <script lang="ts">
 import { Component, Vue } from 'vue-property-decorator';
-import { imagesCollection } from '../firebase'
+import { imagesCollection, storage} from '../firebase'
+import {Image} from "../../models/Image";
 
 @Component({
   components: {
   },
 })
 export default class Console extends Vue {
+  public images: Image[] = [] as Image[]
+
   public async getImages() {
-    console.log("bla")
-
-
-    const result = await imagesCollection.where("date",">", 0).orderBy("date").limit(3).get()
-    console.log(result)
+    const result = await imagesCollection.limit(10).orderBy("date","desc").get()
+    const extractedImages = [] as Image[]
+    for (const doc of result.docs) {
+      const image: any = doc.data()
+      image.date = image.date.toDate()
+      const pathReference = storage.ref(image.filename);
+      const url = await pathReference.getDownloadURL()
+      image.url = url
+      extractedImages.push(image as Image)
+    }
+    this.images = extractedImages
+    console.log(this.images)
 
   }
   mounted() {
