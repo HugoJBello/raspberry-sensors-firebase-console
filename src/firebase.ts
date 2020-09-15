@@ -23,11 +23,13 @@ const storage = firebase.storage()
 
 // collection references
 const imagesCollection = db.collection('images')
+const devicesCollection = db.collection('devices')
 
 // export utils/refs
 export {
     db,
     auth,
     imagesCollection,
+    devicesCollection,
     storage
 }
